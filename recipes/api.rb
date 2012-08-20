@@ -4,8 +4,6 @@
 #
 # Copyright 2012, Gridcentric Inc.
 #
-# All rights reserved - Do Not Redistribute
-#
 
 include_recipe "apt"
 
