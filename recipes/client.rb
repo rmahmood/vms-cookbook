@@ -31,4 +31,5 @@ end
 
 package "novaclient-gridcentric" do
   action :install
+  options "-o APT::Install-Recommends=0"
 end

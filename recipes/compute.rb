@@ -31,5 +31,6 @@ end
 
 package "nova-compute-gridcentric" do
   action :install
+  options "-o APT::Install-Recommends=0"
 end
 
