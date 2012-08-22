@@ -42,6 +42,15 @@ Gridcentric VMS is installed on a stock Openstack installation newer than the
 installation. This cookbook has been tested against the openstack cookbooks
 maintained by Rackspace (https://github.com/rcbops/chef-cookbooks).
 
+Attributes
+==========
+
+All the attributes used by this cookbook are used to filling in the the
+corresponding configuration parameter in the `/etc/sysconfig/vms` config
+file. See the template `default/vms.erb` for in-line explanations of what these
+parameters do. The defaults are sufficient for getting a working vms
+installation in a typical openstack node.
+
 Data Bags
 =========
 
