@@ -5,8 +5,6 @@
 # Copyright 2012, Gridcentric Inc.
 #
 
-include_recipe "apt"
-
 repo_data = data_bag_item("gridcentric", "repos")
 distro_repo_map = Hash[ "centos" =>  "centos",
                         "fedora" => "rpm",
