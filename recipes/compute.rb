@@ -48,3 +48,13 @@ template "/etc/sysconfig/vms" do
   mode "0644"
   variables(template_variables)
 end
+
+service "nova-gc" do
+  if node[:platform] == "ubuntu" and node[:platform_version].to_f >= 9.10
+    provider Chef::Provider::Service::Upstart
+  else
+    # FIXME: We should add a proper init script in /etc/init.d for nova-gc.
+    raise "Don't know how to restart nova-gc on platform #{node[:platform]}."
+  end
+  action :restart
+end
