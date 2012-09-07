@@ -49,6 +49,11 @@ template "/etc/sysconfig/vms" do
   variables(template_variables)
 end
 
+execute "rm -rf /tmp/vms" do
+  command "rm -rf /tmp/vms"
+  action :execute
+end
+
 service "nova-gc" do
   if node[:platform] == "ubuntu" and node[:platform_version].to_f >= 9.10
     provider Chef::Provider::Service::Upstart
