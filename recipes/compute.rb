@@ -51,7 +51,7 @@ end
 
 execute "rm -rf /tmp/vms" do
   command "rm -rf /tmp/vms"
-  action :execute
+  action :run
 end
 
 service "nova-gc" do
