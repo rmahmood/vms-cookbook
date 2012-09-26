@@ -40,6 +40,10 @@ else
   raise "Unsupported platform: #{node["platform"]}"
 end
 
+package "linux-headers-#{node["kernel"]["release"]}" do
+  action :install
+end
+
 package "vms-agent" do
   action :install
 end
