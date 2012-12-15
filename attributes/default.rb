@@ -2,6 +2,10 @@
 # the appropriate line in the config file, provided the parameter
 # isn't mandatory.
 
+default["vms"]["os-version"] = "folsom"
+
+default["vms"]["sysconfig"]["vms_user"] = nil
+default["vms"]["sysconfig"]["vms_group"] = nil
 default["vms"]["sysconfig"]["vms_shelf_path"] = "/dev/shm"
 default["vms"]["sysconfig"]["vms_shared_path"] = "/var/gridcentric"
 default["vms"]["sysconfig"]["vms_disk_url"] = nil
@@ -14,4 +18,5 @@ default["vms"]["sysconfig"]["vmsd_opts"] = ""
 default["vms"]["sysconfig"]["vms_debug"] = "0"
 default["vms"]["sysconfig"]["vms_guest_params"] = nil
 default["vms"]["sysconfig"]["vms_ceph_conf"] = nil
+default["vms"]["sysconfig"]["vms_ceph_login"] = nil
 default["vms"]["sysconfig"]["vms_qemu_cpu_model"] = nil

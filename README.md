@@ -45,9 +45,14 @@ maintained by Rackspace (https://github.com/rcbops/chef-cookbooks).
 Attributes
 ==========
 
-All the attributes used by this cookbook are used to filling in the the
-corresponding configuration parameter in the `/etc/sysconfig/vms` config
-file. See the template `default/vms.erb` for in-line explanations of what these
+The `node["vms"]["os-version"]` attribute specifics the Openstack
+version of the node. Valid values for this attribute are "essex" and
+"folsom". Recipes make use of this value to select the appropriate
+package repository.
+
+All the other attributes are used to fill in the the corresponding
+configuration parameter in the `/etc/sysconfig/vms` config file. See
+the template `default/vms.erb` for in-line explanations of what these
 parameters do. The defaults are sufficient for getting a working vms
 installation in a typical openstack node.
 

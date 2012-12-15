@@ -5,6 +5,8 @@
 # Copyright 2012, Gridcentric Inc.
 #
 
+include_recipe "apt"
+
 repo_data = data_bag_item("gridcentric", "repos")
 distro_repo_map = Hash[ "centos" =>  "centos",
                         "fedora" => "rpm",
@@ -15,23 +17,25 @@ distro_repo_map = Hash[ "centos" =>  "centos",
 # Add the appropriate source list based on the platform.
 if platform?(%w{ ubuntu debian })
   apt_repository "gridcentric-public" do
-    uri "http://downloads.gridcentriclabs.com/packages/#{repo_data["public_key"]}/agent/#{distro_repo_map[node["platform"]]}/"
+    uri "#{repo_data["base_url"].chomp("/")}/" +
+      "#{repo_data["public_key"]}/agent/#{distro_repo_map[node["platform"]]}/"
     if platform?("ubuntu")
       components ["gridcentric", "multiverse"]
     else
       components ["gridcentric", "non-free"]
     end
-    key "http://downloads.gridcentriclabs.com/packages/gridcentric.key"
+    key "#{repo_data["base_url"].chomp("/")}/gridcentric.key"
     notifies :run, resources(:execute => "apt-get update"), :immediately
   end
 elsif platform?(%w{ centos fedora })
   yum_key "RPM-GPG-KEY-gridcentric" do
-    url "http://downloads.gridcentriclabs.com/packages/gridcentric.key"
+    url "#{repo_data["base_url"].chomp("/")}/gridcentric.key"
     action :add
   end
   yum_repository "gridcentric-vms" do
     name "gridcentric-vms"
-    url "http://downloads.gridcentriclabs.com/packages/#{repo_data["public_key"]}/agent/#{distro_repo_map[node["platform"]]}"
+    url "#{repo_data["base_url"]}/#{repo_data["public_key"]}" +
+      "/agent/#{distro_repo_map[node["platform"]]}"
     key "RPM-GPG-KEY-gridcentric"
     action :add
   end

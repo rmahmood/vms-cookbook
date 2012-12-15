@@ -10,6 +10,36 @@
 # as by the Gridcentric Openstack nova extension. It contains simple key=value
 # pairs.
 
+
+# The username or uid of the user that should have access to vms's runtime files
+# (VMS_SHELF_PATH, VMS_LOGS, VMS_CACHE, and VMS_STORE). Generally, this is the
+# user that runs virtual-machine related processes on the host (i.e., the user
+# that runs qemu when you're using kvm and the user that runs xenguest when
+# you're using xen).
+#
+# The permissions of vms's runtime files are enforced (i.e., chown / chmod will
+# be called on these directories!), so ensure that they're subdirectories of
+# standard Linux paths, unless you want /tmp to be chown'd! For example, use
+# /tmp/vms instead of /tmp.
+#
+# VMS_USER is set automatically when the integration packages are installed
+# (i.e, vms-libvirt and vms-xapi).
+#
+<% if @vms_user.nil? -%>
+#VMS_USER=
+<% else -%>
+VMS_USER=<%= @vms_user %>
+<% end -%>
+
+# The group that should have access to vms's runtime files. If omitted, the gid
+# of VMS_USER is used.
+#
+<% if @vms_group.nil? -%>
+#VMS_GROUP=
+<% else -%>
+VMS_GROUP=<%= @vms_group %>
+<% end -%>
+
 # The location of the shelf (local metadata). Small file requiring fast random
 # access (preferably tmpfs or SSD). Note that ubuntu distros mount tmpfs on
 # /run/shm.
@@ -100,6 +130,14 @@ VMS_GUEST_PARAMS=<%= @vms_guest_params %>
 #VMS_CEPH_CONF=/etc/ceph/ceph.conf
 <% else -%>
 VMS_CEPH_CONF=<%= @vms_ceph_conf %>
+<% end -%>
+
+# Login to be used when authenticating to ceph. If omitted, then the default
+# ceph login (admin) is used:
+<% if @vms_ceph_login.nil? -%>
+#VMS_CEPH_LOGIN=admin
+<% else -%>
+VMS_CEPH_LOGIN=<%= @vms_ceph_login %>
 <% end -%>
 
 # Force a CPU model. Only set if you have a heterogeneous cluster. Use the lowest
