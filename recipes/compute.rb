@@ -13,13 +13,11 @@ if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
 end
 
-repo_data = data_bag_item("gridcentric", "repos")
-
 [ "vms", node["vms"]["os-version"] ].each do |repo|
   apt_repository "gridcentric-#{repo}" do
-    uri construct_repo_uri(repo, repo_data)
+    uri construct_repo_uri(repo, node)
     components ["gridcentric", "multiverse"]
-    key construct_key_uri(repo_data)
+    key construct_key_uri(node)
     only_if { platform?("ubuntu") }
   end
 end

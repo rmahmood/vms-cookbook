@@ -13,12 +13,10 @@ if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
 end
 
-repo_data = data_bag_item("gridcentric", "repos")
-
 apt_repository "gridcentric-#{node["vms"]["os-version"]}" do
-  uri construct_repo_uri(node["vms"]["os-version"], repo_data)
+  uri construct_repo_uri(node["vms"]["os-version"], node)
   components ["gridcentric", "multiverse"]
-  key construct_key_uri(repo_data)
+  key construct_key_uri(node)
   notifies :run, resources(:execute => "apt-get update"), :immediately
   only_if { platform?("ubuntu") }
 end
