@@ -50,27 +50,15 @@ version of the node. Valid values for this attribute are "essex" and
 "folsom". Recipes make use of this value to select the appropriate
 package repository.
 
-All the other attributes are used to fill in the the corresponding
-configuration parameter in the `/etc/sysconfig/vms` config file. See
-the template `default/vms.erb` for in-line explanations of what these
-parameters do. The defaults are sufficient for getting a working vms
-installation in a typical openstack node.
+All the attributes under `node["vms"]["sysconfig"]` are used to fill
+in the the corresponding vms parameters in the `/etc/sysconfig/vms`
+config file. See the template `default/vms.erb` for in-line
+explanations of what these parameters do. The defaults are sufficient
+for getting a working vms installation in a typical openstack node.
 
-Data Bags
-=========
-
-This cookbook looks for the repository private key in the `gridcentric/repos`
-databag. An example databag should have been provided with this cookbook. Simply
-substitute your private access key into the repos.json file and import the
-databag into your chef server.
-
-Relevant keys are: 
-* `gridcentric/repos/private_key`: Used to access the private Gridcentric
-  repositories containing the host-side VMS packages
-* `gridcentric/repos/public_key`: Used to access the public Gridcentic
-  repositories containing the guest VMS packages. At the moment, this repository
-  provides the various guest agent packages.
-
+Finally, the attributes under `node["vms"]["repo"]` specify the
+package repository location. A private key provided by Gridcentric is
+required to access some of the packages.
 
 Recipes
 =======
