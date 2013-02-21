@@ -87,4 +87,4 @@ agent
 nfs
 ---
 - Installs packages to mount an nfs volume
-- mounts a shared_volume on the vms_shared_path mountpoint
+- mounts a `node["vms"]["sysconfig"]["shared_volume"]` on the `node["vms"]["sysconfig"]["vms_shared_path"]` mountpoint
