@@ -83,3 +83,8 @@ agent
 -----
 - Installs the VMS gust packages.
 - Should be installed on any instance which will be blessed using VMS.
+
+nfs
+---
+- Installs packages to mount an nfs volume
+- mounts a `node["vms"]["sysconfig"]["shared_volume"]` on the `node["vms"]["sysconfig"]["vms_shared_path"]` mountpoint
