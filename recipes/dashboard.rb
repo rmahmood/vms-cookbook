@@ -1,11 +1,12 @@
 #
 # Cookbook Name:: vms
-# Recipe:: client
+# Recipe:: dashboard
 #
 # Copyright 2012, Gridcentric Inc.
 #
 
 include_recipe "apt"
+include_recipe "vms::client"
 
 ::Chef::Resource::AptRepository.send(:include, Gridcentric::Vms::Helpers)
 

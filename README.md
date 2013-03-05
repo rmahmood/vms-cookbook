@@ -88,3 +88,8 @@ nfs
 ---
 - Installs packages to mount an nfs volume
 - mounts a `node["vms"]["sysconfig"]["shared_volume"]` on the `node["vms"]["sysconfig"]["vms_shared_path"]` mountpoint
+
+dashboard
+---------
+- Installs the horizon-gridcentric package for integrating with horizon
+- Installs the above mentioned client
