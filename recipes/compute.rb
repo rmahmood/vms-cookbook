@@ -28,11 +28,11 @@ execute "apt-get update" do
 end
 
 package "linux-headers-#{node["kernel"]["release"]}" do
-  action :install
+  action :upgrade
 end
 
 package "nova-compute-gridcentric" do
-  action :install
+  action :upgrade
   options "-o APT::Install-Recommends=0"
 end
 

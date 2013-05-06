@@ -26,6 +26,6 @@ package "python-novaclient" do
 end
 
 package "novaclient-gridcentric" do
-  action :install
+  action :upgrade
   options "-o APT::Install-Recommends=0"
 end
