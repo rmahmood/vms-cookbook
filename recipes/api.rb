@@ -22,6 +22,6 @@ apt_repository "gridcentric-#{node["vms"]["os-version"]}" do
 end
 
 package "nova-api-gridcentric" do
-  action :install
+  action :upgrade
   options "-o APT::Install-Recommends=0"
 end

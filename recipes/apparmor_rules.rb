@@ -22,6 +22,6 @@ apt_repository "gridcentric-vms" do
 end
 
 package "vms-apparmor" do
-  action :install
+  action :upgrade
   options "-o APT::Install-Recommends=0"
 end

@@ -46,9 +46,9 @@ else
 end
 
 package "linux-headers-#{node["kernel"]["release"]}" do
-  action :install
+  action :upgrade
 end
 
 package "vms-agent" do
-  action :install
+  action :upgrade
 end
