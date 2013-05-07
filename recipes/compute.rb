@@ -27,13 +27,24 @@ execute "apt-get update" do
   action :run
 end
 
-package "linux-headers-#{node["kernel"]["release"]}" do
-  action :upgrade
+# Explicitly upgrade vms low-level components
+[ "vms-libvirt", "vms-mcdist",
+    "linux-headers-#{node["kernel"]["release"]}" ].each do |pkg|
+  package pkg do
+    action :upgrade
+    options "-o Dpkg::Options::='--force-confnew'"
+  end
+end
+
+if not node["vms"]["sysconfig"]["vms_ceph_conf"].nil?
+  package "vms-rados" do
+    action :upgrade
+  end
 end
 
 package "nova-compute-gridcentric" do
   action :upgrade
-  options "-o APT::Install-Recommends=0"
+  options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
 end
 
 template "/etc/sysconfig/vms" do
