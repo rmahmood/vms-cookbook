@@ -36,6 +36,12 @@ end
   end
 end
 
+if not node["vms"]["sysconfig"]["vms_ceph_conf"].nil?
+  package "vms-rados" do
+    action :upgrade
+  end
+end
+
 package "nova-compute-gridcentric" do
   action :upgrade
   options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
