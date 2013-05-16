@@ -27,8 +27,7 @@ default["vms"]["sysconfig"]["shared_volume"] = nil
 
 # Repository parameters. These control how the gridcentric repositories are
 # accessed during the node setup. To gain access to the private repositories,
-# use the private key provided to you by Gridcentric. The public repository key
-# is always 'public'.
+# use the private key provided to you by Gridcentric.
 default["vms"]["repo"]["url"] = "http://downloads.gridcentriclabs.com/packages"
-default["vms"]["repo"]["public_key"] = "public"
+default["vms"]["repo"]["agent_key"] = "agent"
 default["vms"]["repo"]["private_key"] = nil
