@@ -7,7 +7,7 @@
 
 include_recipe "apt"
 
-distro_repo_map = Hash[ "centos" =>  "centos",
+distro_repo_map = Hash[ "centos" => "centos",
                         "fedora" => "rpm",
                         "ubuntu" => "ubuntu",
                         "debian" => "deb"
@@ -15,9 +15,9 @@ distro_repo_map = Hash[ "centos" =>  "centos",
 
 # Add the appropriate source list based on the platform.
 if platform?(%w{ ubuntu debian })
-  apt_repository "gridcentric-public" do
+  apt_repository "gridcentric-agent" do
     uri "#{node["vms"]["repo"]["url"].chomp("/")}/" +
-        "#{node["vms"]["repo"]["public_key"]}/agent/" +
+        "#{node["vms"]["repo"]["agent_key"]}/linux/" +
         "#{distro_repo_map[node[platform]]}/"
     if platform?("ubuntu")
       components ["gridcentric", "multiverse"]
@@ -32,11 +32,11 @@ elsif platform?(%w{ centos fedora })
     url "#{node["vms"]["repo"]["url"].chomp("/")}/gridcentric.key"
     action :add
   end
-  yum_repository "gridcentric-vms" do
-    name "gridcentric-vms"
+  yum_repository "gridcentric-agent" do
+    name "gridcentric-agent"
     url "#{node["vms"]["repo"]["url"].chomp("/")}/" +
-        "#{node["vms"]["repo"]["public_key"]}" +
-        "/agent/#{distro_repo_map[node["platform"]]}"
+        "#{node["vms"]["repo"]["agent_key"]}/linux/" +
+        "#{distro_repo_map[node["platform"]]}"
     key "RPM-GPG-KEY-gridcentric"
     action :add
   end
