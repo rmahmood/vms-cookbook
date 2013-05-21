@@ -36,9 +36,25 @@ end
   end
 end
 
-if not node["vms"]["sysconfig"]["vms_ceph_conf"].nil?
+unless node["vms"]["sysconfig"]["rados_pool"].nil?
+  if node["vms"]["sysconfig"]["vms_memory_url"].nil?
+    node["vms"]["sysconfig"]["vms_memory_url"] = "rados://#{node["vms"]["sysconfig"]["rados_pool"]}"
+    unless node["vms"]["sysconfig"]["rados_prefix"].nil?
+      node["vms"]["sysconfig"]["vms_memory_url"] += "/#{node["vms"]["sysconfig"]["rados_prefix"]}"
+    end
+  end
+
   package "vms-rados" do
     action :upgrade
+  end
+end
+
+unless node["vms"]["sysconfig"]["rbd_pool"].nil?
+  if node["vms"]["sysconfig"]["vms_disk_url"].nil?
+    node["vms"]["sysconfig"]["vms_disk_url"] = "rbd:#{node["vms"]["sysconfig"]["rbd_pool"]}"
+    unless node["vms"]["sysconfig"]["rbd_prefix"].nil?
+      node["vms"]["sysconfig"]["vms_disk_url"] += "/#{node["vms"]["sysconfig"]["rbd_prefix"]}"
+    end
   end
 end
 

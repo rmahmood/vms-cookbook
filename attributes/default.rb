@@ -22,8 +22,14 @@ default["vms"]["sysconfig"]["vms_guest_params"] = nil
 default["vms"]["sysconfig"]["vms_ceph_conf"] = nil
 default["vms"]["sysconfig"]["vms_ceph_login"] = nil
 default["vms"]["sysconfig"]["vms_qemu_cpu_model"] = nil
+
 default["vms"]["sysconfig"]["shared_device"] = nil
 default["vms"]["sysconfig"]["shared_volume"] = nil
+
+default["vms"]["sysconfig"]["rados_pool"] = nil
+default["vms"]["sysconfig"]["rados_prefix"] = nil
+default["vms"]["sysconfig"]["rbd_pool"] = nil
+default["vms"]["sysconfig"]["rbd_prefix"] = nil
 
 # Repository parameters. These control how the gridcentric repositories are
 # accessed during the node setup. To gain access to the private repositories,
