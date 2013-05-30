@@ -40,15 +40,33 @@ VMS_USER=<%= @vms_user %>
 VMS_GROUP=<%= @vms_group %>
 <% end -%>
 
-# The location of the shelf (local metadata). Small file requiring fast random
-# access (preferably tmpfs or SSD). Note that ubuntu distros mount tmpfs on
-# /run/shm.
+# This is the default directory for cached and shared state (small files
+# requiring fast random access).  This should generally be tmpfs, an SSD or
+# fast local disk.
+VMS_CACHE=<%= @vms_cache %>
+
+# Like VMS_CACHE: used for shared ephemeral state, ideally on tmpfs. Although
+# VMS_SHELF_PATH and VMS_CACHE are logically redundant, VMS_SHELF_PATH is kept
+# for backward compatibility with old vms installations. Defaults to /dev/shm.
 VMS_SHELF_PATH=<%= @vms_shelf_path %>
 
 # This is the default directory for large shared state. Currently,
 # this is used when saving memory and disk snapshots, as well as descriptors.
 # Unlike the VMS_STORE below, this should be consistent across hosts.
 VMS_SHARED_PATH=<%= @vms_shared_path %>
+
+# This is the default directory for larger private (on-disk) state.
+# For example the paging file used when eviction.paging=1 is placed here.
+# Choose it carefully: you may want to link this with a larger storage
+# repository and use it to also store the descriptors. However, using shared
+# storage for this private state may result in unnecessary network traffic.
+# NOTE: If this is not provided, the base location of the descriptor path
+# will be used instead.
+<% if @vms_store.nil? -%>
+# VMS_STORE=/data
+<% else -%>
+VMS_STORE=<%= @vms_store %>
+<% end -%>
 
 # When blessing, disks are saved to this URL. In its absense, disks are
 # saved to VMS_SHARED_PATH. Supported protocols are
@@ -82,24 +100,6 @@ VMS_LOGS=<%= @vms_logs %>
 # VMS_SINGLE_LOG=false
 <% else -%>
 VMS_SINGLE_LOG=<%= @vms_single_log %>
-<% end -%>
-
-# This is the default directory for cached and shared state (small files
-# requiring fast random access).  This should generally be tmpfs, an SSD or
-# fast local disk.
-VMS_CACHE=<%= @vms_cache %>
-
-# This is the default directory for larger private (on-disk) state.
-# For example the paging file used when eviction.paging=1 is placed here.
-# Choose it carefully: you may want to link this with a larger storage
-# repository and use it to also store the descriptors. However, using shared
-# storage for this private state may result in unnecessary network traffic.
-# NOTE: If this is not provided, the base location of the descriptor path
-# will be used instead.
-<% if @vms_store.nil? -%>
-# VMS_STORE=/data
-<% else -%>
-VMS_STORE=<%= @vms_store %>
 <% end -%>
 
 # VMSD_OPTS is appended to the vmsd command line.
