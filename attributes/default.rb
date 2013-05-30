@@ -1,5 +1,39 @@
-# The Openstack version on the node. Value should be either "essex" or "folsom".
-default["vms"]["os-version"] = "folsom"
+# The Openstack version on the node. Value should be either "essex",
+# "folsom" or "grizzly".
+default["gridcentric"]["os-version"] = "folsom"
+
+# Repository parameters. These control how the gridcentric repositories are
+# accessed during the node setup. To gain access to the private repositories,
+# use the appropriate keys provided to you by Gridcentric.
+default["gridcentric"]["repo"]["base-uri"] = "http://downloads.gridcentriclabs.com/packages"
+
+default["gridcentric"]["repo"]["agent"]["key"] = "agent"
+default["gridcentric"]["repo"]["cobalt"]["key"] = "cobalt"
+default["gridcentric"]["repo"]["cobaltclient"]["key"] = "cobaltclient"
+default["gridcentric"]["repo"]["vms"]["key"] = nil
+
+# These attributes are aliases provided for compatibility reasons. These aliases
+# are deprecated and may be removed in a future version. If provided, these are
+# considered be of higher precendence than the canonical attributes since they
+# are guranteed to be set by the user whereas the canonical attributes may have
+# a default value.
+#
+#     # Fallback for default["gridcentric"]["os-version"]
+#     default["vms"]["os-version"] = "folsom"
+#
+#     # Fallback for default["gridcentric"]["repo"]["base-uri"]
+#     default["vms"]["repo"]["url"] = "http://downloads.gridcentriclabs.com/packages"
+#
+#     # Fallback for default["gridcentric"]["repo"]["vms"]["key"]
+#     default["vms"]["repo"]["private_key"] = nil
+
+# These attributes can be used to override the base uri for a specific
+# component. If these attributes are not defined or set to nil, recipes will use
+# the global repo uri instead.
+#
+#     default["gridcentric"]["repo"]["agent"]["uri"] = nil
+#     default["gridcentric"]["repo"]["cobaltclient"]["uri"] = nil
+#     default["gridcentric"]["repo"]["vms"]["uri"] = nil
 
 # /etc/sysconfig/vms config file parameters. Set to nil to comment out the
 # appropriate line in the config file, provided the parameter isn't
@@ -30,11 +64,3 @@ default["vms"]["sysconfig"]["rados_pool"] = nil
 default["vms"]["sysconfig"]["rados_prefix"] = nil
 default["vms"]["sysconfig"]["rbd_pool"] = nil
 default["vms"]["sysconfig"]["rbd_prefix"] = nil
-
-# Repository parameters. These control how the gridcentric repositories are
-# accessed during the node setup. To gain access to the private repositories,
-# use the private key provided to you by Gridcentric.
-default["vms"]["repo"]["url"] = "http://downloads.gridcentriclabs.com/packages"
-default["vms"]["repo"]["agent_key"] = "agent"
-default["vms"]["repo"]["client_key"] = "cobaltclient"
-default["vms"]["repo"]["private_key"] = nil
