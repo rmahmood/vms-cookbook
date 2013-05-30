@@ -6,21 +6,27 @@
 #
 
 include_recipe "apt"
-::Chef::Recipe.send(:include, Gridcentric)
+include_recipe "vms"
 
 if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
 end
 
-[ "vms", node["vms"]["os-version"] ].each do |repo|
+%w{ vms, cobalt }.each do |repo|
   apt_repository "gridcentric-#{repo}" do
-    uri Vms::Helpers.construct_repo_uri(repo, node)
-    components ["gridcentric", "multiverse"]
-    key Vms::Helpers.construct_key_uri(node)
+    uri node["gridcentric"]["repo"][repo]["uri"]
+    components node["gridcentric"]["repo"]["components"]
+    key node["gridcentric"]["repo"]["key-uri"]
     only_if { platform?("ubuntu") }
   end
 end
 
+apt_repository "gridcentric-cobalt" do
+
+end
+
+# Do this separately to avoid redundant updates, since we include
+# multiple repositories.
 execute "apt-get update" do
   command "apt-get update"
   action :run
@@ -71,7 +77,7 @@ unless node["vms"]["sysconfig"]["rbd_pool"].nil?
   end
 end
 
-if ["folsom", "essex", "diablo"].include?(node["vms"]["os-version"])
+if ["folsom", "essex", "diablo"].include?(node["gridcentric"]["os-version"])
   package "nova-compute-gridcentric" do
     action :upgrade
     options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"

@@ -6,22 +6,22 @@
 #
 
 include_recipe "apt"
+include_recipe "vms"
 include_recipe "vms::client"
-::Chef::Recipe.send(:include, Gridcentric)
 
 if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
 end
 
-apt_repository "gridcentric-#{node["vms"]["os-version"]}" do
-  uri Vms::Helpers.construct_repo_uri(node["vms"]["os-version"], node)
-  components ["gridcentric", "multiverse"]
-  key Vms::Helpers.construct_key_uri(node)
+apt_repository "gridcentric-dashboard-#{node["gridcentric"]["os-version"]}" do
+  uri node["gridcentric"]["repo"]["cobalt"]["uri"]
+  components node["gridcentric"]["repo"]["components"]
+  key node["gridcentric"]["repo"]["key-uri"]
   notifies :run, resources(:execute => "apt-get update"), :immediately
   only_if { platform?("ubuntu") }
 end
 
-if ["folsom", "essex", "diablo"].include?(node["vms"]["os-version"])
+if ["folsom", "essex", "diablo"].include?(node["gridcentric"]["os-version"])
   package "horizon-gridcentric" do
     action :upgrade
     options "-o APT::Install-Recommends=0"

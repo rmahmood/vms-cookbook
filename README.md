@@ -46,9 +46,10 @@ cookbooks maintained by Rackspace (https://github.com/rcbops/chef-cookbooks).
 Attributes
 ==========
 
-The `node["vms"]["os-version"]` attribute specifics the Openstack version of
-the node. Valid values for this attribute are "essex", "grizzly" and "folsom".
-Recipes make use of this value to select the appropriate package repository.
+The `node["gridcentric"]["os-version"]` attribute specifics the Openstack
+version of the node. Valid values for this attribute are "essex", "folsom" and
+"grizzly". Recipes make use of this value to select the appropriate package
+repository.
 
 All the attributes under `node["vms"]["sysconfig"]` are used to fill
 in the the corresponding vms parameters in the `/etc/sysconfig/vms`
@@ -56,9 +57,9 @@ config file. See the template `default/vms.erb` for in-line
 explanations of what these parameters do. The defaults are sufficient
 for getting a working vms installation in a typical openstack node.
 
-Finally, the attributes under `node["vms"]["repo"]` specify the
-package repository location. A private key provided by Gridcentric is
-required to access some of the packages.
+Finally, the attributes under `node["gridcentric"]["repo"]` specify the package
+repository location. A private key provided by Gridcentric is required to access
+some of the packages.
 
 Recipes
 =======
@@ -111,4 +112,4 @@ Your VMS install should now be using Ceph storage.
 You can achieve finer-grained configuration through the `["rados_prefix"]`,
 `["rbd_prefix"]`, `["vms_ceph_conf"]` and `["vms_ceph_login"]` attributes of the
 `["vms"]["sysconfig"]` node. The defaults are usually fine.
- 
+
