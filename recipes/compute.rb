@@ -6,8 +6,7 @@
 #
 
 include_recipe "apt"
-
-::Chef::Resource::AptRepository.send(:include, Gridcentric::Vms::Helpers)
+::Chef::Recipe.send(:include, Gridcentric)
 
 if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
@@ -15,9 +14,9 @@ end
 
 [ "vms", node["vms"]["os-version"] ].each do |repo|
   apt_repository "gridcentric-#{repo}" do
-    uri construct_repo_uri(repo, node)
+    uri Vms::Helpers.construct_repo_uri(repo, node)
     components ["gridcentric", "multiverse"]
-    key construct_key_uri(node)
+    key Vms::Helpers.construct_key_uri(node)
     only_if { platform?("ubuntu") }
   end
 end
