@@ -6,32 +6,24 @@
 #
 
 include_recipe "apt"
-::Chef::Recipe.send(:include, Gridcentric)
+include_recipe "vms"
 
 # Add the appropriate source list based on the platform.
 if platform?(%w{ ubuntu debian })
   apt_repository "gridcentric-agent" do
-    uri "#{node["vms"]["repo"]["url"].chomp("/")}/" +
-        "#{node["vms"]["repo"]["agent_key"]}/linux/" +
-        "#{Vms::Helpers.translate_distro_to_repo(node["platform"])}"
-    if platform?("ubuntu")
-      components ["gridcentric", "multiverse"]
-    else
-      components ["gridcentric", "non-free"]
-    end
-    key Vms::Helpers.construct_repo_uri(node)
+    uri node["gridcentric"]["repo"]["agent"]["uri"]
+    components node["gridcentric"]["repo"]["components"]
+    key node["gridcentric"]["repo"]["key-uri"]
     notifies :run, resources(:execute => "apt-get update"), :immediately
   end
 elsif platform?(%w{ centos fedora })
   yum_key "RPM-GPG-KEY-gridcentric" do
-    url Vms::Helpers.construct_repo_uri(node)
+    url node["gridcentric"]["repo"]["key-uri"]
     action :add
   end
   yum_repository "gridcentric-agent" do
     name "gridcentric-agent"
-    url "#{node["vms"]["repo"]["url"].chomp("/")}/" +
-        "#{node["vms"]["repo"]["agent_key"]}/linux/" +
-        "#{Vms::Helpers.translate_distro_to_repo(node["platform"])}"
+    url node["gridcentric"]["repo"]["agent"]["uri"]
     key "RPM-GPG-KEY-gridcentric"
     action :add
   end

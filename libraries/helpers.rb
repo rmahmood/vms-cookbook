@@ -1,33 +1,15 @@
 #
 # Cookbook Name:: vms
-# Library:: utils
+# Library:: helpers
 #
-# Copyright 2012, Gridcentric Inc.
+# Copyright 2013, Gridcentric Inc.
 #
-# Some common utility functions used in various recipies.
+# Some common utility functions.
 #
 
 module Gridcentric
-  module Vms
-    module Helpers
-
-      def self.construct_repo_uri(repo, node)
-        if not node["vms"]["repo"]["private_key"].nil?
-          return [node["vms"]["repo"]["url"].chomp("/"),
-                  node["vms"]["repo"]["private_key"],
-                  repo, "ubuntu"].join("/")
-        else
-          return [node["vms"]["repo"]["url"].chomp("/"),
-                  repo, "ubuntu"].join("/")
-        end
-      end
-
-      def self.construct_key_uri(node)
-        return [node["vms"]["repo"]["url"].chomp("/"),
-                "gridcentric.key"].join("/")
-      end
-
-      def self.translate_distro_to_repo(distro)
+  module Repositories
+      def self.translate_distro_to_repo_type(distro)
         case distro
         when "centos"
           return "centos"
@@ -41,7 +23,5 @@ module Gridcentric
           raise "Unknown distro '#{distro}'"
         end
       end
-
-    end
   end
 end
