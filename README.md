@@ -37,28 +37,27 @@ This cookbook is dependent on the following cookbooks:
 External Dependencies
 ---------------------
 
-Gridcentric VMS is installed on a stock Openstack installation newer than the
-"diablo" release. This cookbook expects a stock Openstack Essex
-installation. This cookbook has been tested against the openstack cookbooks
-maintained by Rackspace (https://github.com/rcbops/chef-cookbooks).
+Gridcentric VMS requires a stock Openstack 'Essex' or newer installation. This
+cookbook has been tested against the openstack cookbooks maintained by Rackspace
+(https://github.com/rcbops/chef-cookbooks).
 
 Attributes
 ==========
 
-The `node["vms"]["os-version"]` attribute specifics the Openstack
-version of the node. Valid values for this attribute are "essex" and
-"folsom". Recipes make use of this value to select the appropriate
-package repository.
+The `node["vms"]["os-version"]` attribute specifics the Openstack version of the
+node. Valid values for this attribute are "essex", "folsom" and "grizzly".
+Recipes make use of this value to select the appropriate package repository.
 
-All the attributes under `node["vms"]["sysconfig"]` are used to fill
-in the the corresponding vms parameters in the `/etc/sysconfig/vms`
-config file. See the template `default/vms.erb` for in-line
-explanations of what these parameters do. The defaults are sufficient
-for getting a working vms installation in a typical openstack node.
+All the attributes under `node["vms"]["sysconfig"]` are used to fill in the the
+corresponding vms parameters in the `/etc/sysconfig/vms` config file. See the
+template `default/vms.erb` for in-line explanations of what these parameters
+do. The defaults are sufficient for getting a working vms installation in a
+typical openstack node.
 
-Finally, the attributes under `node["vms"]["repo"]` specify the
-package repository location. A private key provided by Gridcentric is
-required to access some of the packages.
+
+Finally, the attributes under `node["vms"]["repo"]` specify the package
+repository location. A private key provided by Gridcentric is required to access
+some of the packages.
 
 Recipes
 =======
@@ -76,20 +75,20 @@ api
 client
 ------
 - Installs the python bindings for the openstack VMS extension. Useful for
-  issuing VMS requests to an VMS-enabled openstack cluster.
-
-
-agent
------
-- Installs the VMS gust packages.
-- Should be installed on any instance which will be blessed using VMS.
-
-nfs
----
-- Installs packages to mount an nfs volume
-- mounts a `node["vms"]["sysconfig"]["shared_volume"]` on the `node["vms"]["sysconfig"]["vms_shared_path"]` mountpoint
+  issuing VMS requests to a VMS-enabled openstack cluster.
 
 dashboard
 ---------
 - Installs the horizon-gridcentric package for integrating with horizon
 - Installs the above mentioned client
+
+nfs
+---
+- Installs packages to mount an nfs volume
+- mounts a `node["vms"]["sysconfig"]["shared_volume"]` on the
+  `node["vms"]["sysconfig"]["vms_shared_path"]` mountpoint
+
+agent
+-----
+- Installs the VMS gust packages.
+- Should be installed on any instance which will be blessed using VMS.
