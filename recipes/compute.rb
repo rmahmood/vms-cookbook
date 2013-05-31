@@ -6,8 +6,7 @@
 #
 
 include_recipe "apt"
-
-::Chef::Resource::AptRepository.send(:include, Gridcentric::Vms::Helpers)
+::Chef::Recipe.send(:include, Gridcentric)
 
 if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
@@ -15,15 +14,29 @@ end
 
 [ "vms", node["vms"]["os-version"] ].each do |repo|
   apt_repository "gridcentric-#{repo}" do
-    uri construct_repo_uri(repo, node)
+    uri Vms::Helpers.construct_repo_uri(repo, node)
     components ["gridcentric", "multiverse"]
-    key construct_key_uri(node)
+    key Vms::Helpers.construct_key_uri(node)
     only_if { platform?("ubuntu") }
   end
 end
 
 execute "apt-get update" do
   command "apt-get update"
+  action :run
+end
+
+# Workaround for 2.4 packaging bug. The 2.4 vms-libvirt package
+# scripts refers to a script called 'start-stop-vmsmd' which it
+# doesn't provide. This means start-stop-vmsmd can go missing, and
+# this breaks the package uninstall scripts. As a workaround, this
+# recipe checks to see if start-stop-vmsmd exists and creates a dummy
+# script if it's missing. Note that the dummy script is simply an
+# empty file and doesn't need to do anything for the uninstall to
+# succeed.
+execute "ensure start-stop-vmsmd" do
+  command "[ -e /usr/sbin/start-stop-vmsmd ] || " +
+    "(touch /usr/sbin/start-stop-vmsmd && chmod a+x /usr/sbin/start-stop-vmsmd)"
   action :run
 end
 
@@ -36,15 +49,38 @@ end
   end
 end
 
-if not node["vms"]["sysconfig"]["vms_ceph_conf"].nil?
+unless node["vms"]["sysconfig"]["rados_pool"].nil?
+  if node["vms"]["sysconfig"]["vms_memory_url"].nil?
+    node["vms"]["sysconfig"]["vms_memory_url"] = "rados://#{node["vms"]["sysconfig"]["rados_pool"]}"
+    unless node["vms"]["sysconfig"]["rados_prefix"].nil?
+      node["vms"]["sysconfig"]["vms_memory_url"] += "/#{node["vms"]["sysconfig"]["rados_prefix"]}"
+    end
+  end
+
   package "vms-rados" do
     action :upgrade
   end
 end
 
-package "nova-compute-gridcentric" do
-  action :upgrade
-  options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
+unless node["vms"]["sysconfig"]["rbd_pool"].nil?
+  if node["vms"]["sysconfig"]["vms_disk_url"].nil?
+    node["vms"]["sysconfig"]["vms_disk_url"] = "rbd:#{node["vms"]["sysconfig"]["rbd_pool"]}"
+    unless node["vms"]["sysconfig"]["rbd_prefix"].nil?
+      node["vms"]["sysconfig"]["vms_disk_url"] += "/#{node["vms"]["sysconfig"]["rbd_prefix"]}"
+    end
+  end
+end
+
+if ["folsom", "essex", "diablo"].include?(node["vms"]["os-version"])
+  package "nova-compute-gridcentric" do
+    action :upgrade
+    options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
+  end
+else
+  package "cobalt-compute" do
+    action :upgrade
+    options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
+  end
 end
 
 template "/etc/sysconfig/vms" do
@@ -55,17 +91,12 @@ template "/etc/sysconfig/vms" do
   variables(node["vms"]["sysconfig"])
 end
 
-execute "rm -rf /tmp/vms" do
-  command "rm -rf /tmp/vms"
+# Clean up the dummy script we may have created in the workaround
+# earlier. It's safe to unconditionally delete the file since the
+# broken package is no longer distributed and since we just finished a
+# successful install/upgrade, we definitely do not need the script
+# anymore.
+execute "cleanup dummy start-stop-vmsmd" do
+  command "rm -f /usr/sbin/start-stop-vmsmd"
   action :run
-end
-
-service "nova-gc" do
-  if node[:platform] == "ubuntu" and node[:platform_version].to_f >= 9.10
-    provider Chef::Provider::Service::Upstart
-  else
-    # FIXME: We should add a proper init script in /etc/init.d for nova-gc.
-    raise "Don't know how to restart nova-gc on platform #{node[:platform]}."
-  end
-  action :restart
 end
