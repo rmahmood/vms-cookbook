@@ -1,6 +1,6 @@
 # The Openstack version on the node. Value should be either "essex",
 # "folsom" or "grizzly".
-default["gridcentric"]["os-version"] = "folsom"
+default["gridcentric"]["os-version"] = nil
 
 # Repository parameters. These control how the gridcentric repositories are
 # accessed during the node setup. To gain access to the private repositories,
@@ -14,9 +14,9 @@ default["gridcentric"]["repo"]["vms"]["key"] = nil
 
 # These attributes are aliases provided for compatibility reasons. These aliases
 # are deprecated and may be removed in a future version. If provided, these are
-# considered be of higher precendence than the canonical attributes since they
-# are guranteed to be set by the user whereas the canonical attributes may have
-# a default value.
+# considered to be of higher precendence than the canonical attributes since
+# they are guaranteed to be set by the user whereas the canonical attributes may
+# have a default value.
 #
 #     # Fallback for default["gridcentric"]["os-version"]
 #     default["vms"]["os-version"] = "folsom"
@@ -39,7 +39,6 @@ default["gridcentric"]["repo"]["vms"]["key"] = nil
 # appropriate line in the config file, provided the parameter isn't
 # mandatory. See the template 'vms.erb' for an inline explanation of what these
 # parameters do.
-
 default["vms"]["sysconfig"]["vms_user"] = nil
 default["vms"]["sysconfig"]["vms_group"] = nil
 default["vms"]["sysconfig"]["vms_shelf_path"] = "/dev/shm"

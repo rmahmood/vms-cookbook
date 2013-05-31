@@ -46,10 +46,15 @@ cookbooks maintained by Rackspace (https://github.com/rcbops/chef-cookbooks).
 Attributes
 ==========
 
+As a rule of thumb, all attributes under "gridcentric" with nil as the default
+value need to be provided by the user. The easiest way to provide these is to
+override these attributes in the nodes' environment. Leaving all other
+attributes at their default values should yield a working installation.
+
 The `node["gridcentric"]["os-version"]` attribute specifics the Openstack
 version of the node. Valid values for this attribute are "essex", "folsom" and
 "grizzly". Recipes make use of this value to select the appropriate package
-repository.
+repository. This attribute must be provided.
 
 All the attributes under `node["vms"]["sysconfig"]` are used to fill
 in the the corresponding vms parameters in the `/etc/sysconfig/vms`
@@ -59,7 +64,11 @@ for getting a working vms installation in a typical openstack node.
 
 Finally, the attributes under `node["gridcentric"]["repo"]` specify the package
 repository location. A private key provided by Gridcentric is required to access
-some of the packages.
+some of the packages. The default values specify to the official Gridcentric
+repositories.
+
+See the inline comments in `attributes/default.rb` for more information about
+individual attributes.
 
 Recipes
 =======
