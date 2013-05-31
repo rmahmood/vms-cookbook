@@ -1,6 +1,6 @@
 # The Openstack version on the node. Value should be either "essex",
 # "folsom" or "grizzly".
-default["gridcentric"]["os-version"] = "folsom"
+default["gridcentric"]["os-version"] = nil
 
 # Repository parameters. These control how the gridcentric repositories are
 # accessed during the node setup. To gain access to the private repositories,
@@ -39,7 +39,6 @@ default["gridcentric"]["repo"]["vms"]["key"] = nil
 # appropriate line in the config file, provided the parameter isn't
 # mandatory. See the template 'vms.erb' for an inline explanation of what these
 # parameters do.
-
 default["vms"]["sysconfig"]["vms_user"] = nil
 default["vms"]["sysconfig"]["vms_group"] = nil
 default["vms"]["sysconfig"]["vms_shelf_path"] = "/dev/shm"

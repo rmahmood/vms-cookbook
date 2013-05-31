@@ -26,6 +26,11 @@ if node.has_key?("vms")
   end
 end
 
+if node["gridcentric"]["os-version"].nil?
+  raise "Missing attribute: node['gridcentric']['os-version']. " +
+    "This should be an Openstack release codename such as 'folsom'."
+end
+
 # Resolve base uris for all the components.
 %w{ agent cobalt cobaltclient vms }.each do |component|
   if node["gridcentric"]["repo"][component]["uri"].nil?
