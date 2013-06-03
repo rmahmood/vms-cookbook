@@ -32,7 +32,7 @@ if node["gridcentric"]["os-version"].nil?
 end
 
 # Resolve base uris for all the components.
-%w{ agent cobalt cobaltclient vms }.each do |component|
+[ "agent", "cobalt", "cobaltclient", "vms" ].each do |component|
   if node["gridcentric"]["repo"][component]["uri"].nil?
     parts = [ node["gridcentric"]["repo"]["base-uri"].chomp("/"),
               node["gridcentric"]["repo"][component]["key"] ]

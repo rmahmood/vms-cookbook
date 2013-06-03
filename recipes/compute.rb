@@ -12,9 +12,9 @@ if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
 end
 
-[ "vms", node["gridcentric"]["os-version"] ].each do |repo|
-  apt_repository "gridcentric-compute-#{repo}" do
-    uri node["gridcentric"]["repo"]["vms"]["uri"]
+[ "vms", "cobalt" ].each do |repo|
+  apt_repository "gridcentric-#{repo}" do
+    uri node["gridcentric"]["repo"][repo]["uri"]
     components node["gridcentric"]["repo"]["components"]
     key node["gridcentric"]["repo"]["key-uri"]
     only_if { platform?("ubuntu") }

@@ -12,7 +12,7 @@ if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
 end
 
-apt_repository "gridcentric-api-#{node["gridcentric"]["os-version"]}" do
+apt_repository "gridcentric-cobalt" do
   uri node["gridcentric"]["repo"]["cobalt"]["uri"]
   components node["gridcentric"]["repo"]["components"]
   key node["gridcentric"]["repo"]["key-uri"]
