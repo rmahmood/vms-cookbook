@@ -46,9 +46,15 @@ cookbooks maintained by Rackspace (https://github.com/rcbops/chef-cookbooks).
 Attributes
 ==========
 
-The `node["vms"]["os-version"]` attribute specifics the Openstack version of
-the node. Valid values for this attribute are "essex", "grizzly" and "folsom".
-Recipes make use of this value to select the appropriate package repository.
+As a rule of thumb, all attributes under "gridcentric" with nil as the default
+value need to be provided by the user. The easiest way to provide these is to
+override these attributes in the nodes' environment. Leaving all other
+attributes at their default values should yield a working installation.
+
+The `node["gridcentric"]["os-version"]` attribute specifics the Openstack
+version of the node. Valid values for this attribute are "essex", "folsom" and
+"grizzly". Recipes make use of this value to select the appropriate package
+repository. This attribute must be provided.
 
 All the attributes under `node["vms"]["sysconfig"]` are used to fill
 in the the corresponding vms parameters in the `/etc/sysconfig/vms`
@@ -56,9 +62,13 @@ config file. See the template `default/vms.erb` for in-line
 explanations of what these parameters do. The defaults are sufficient
 for getting a working vms installation in a typical openstack node.
 
-Finally, the attributes under `node["vms"]["repo"]` specify the
-package repository location. A private key provided by Gridcentric is
-required to access some of the packages.
+Finally, the attributes under `node["gridcentric"]["repo"]` specify the package
+repository location. A private key provided by Gridcentric is required to access
+some of the packages. The default values specify to the official Gridcentric
+repositories.
+
+See the inline comments in `attributes/default.rb` for more information about
+individual attributes.
 
 Recipes
 =======
@@ -111,4 +121,4 @@ Your VMS install should now be using Ceph storage.
 You can achieve finer-grained configuration through the `["rados_prefix"]`,
 `["rbd_prefix"]`, `["vms_ceph_conf"]` and `["vms_ceph_login"]` attributes of the
 `["vms"]["sysconfig"]` node. The defaults are usually fine.
- 
+
