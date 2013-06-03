@@ -41,8 +41,8 @@ execute "ensure start-stop-vmsmd" do
 end
 
 # Explicitly upgrade vms low-level components
-[ "vms-libvirt", "vms-mcdist",
-    "linux-headers-#{node["kernel"]["release"]}" ].each do |pkg|
+[ "linux-headers-#{node["kernel"]["release"]}",
+  "vms-libvirt", "vms-mcdist" ].each do |pkg|
   package pkg do
     action :upgrade
     options "-o Dpkg::Options::='--force-confnew'"
