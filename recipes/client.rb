@@ -12,14 +12,14 @@ if not platform?("ubuntu")
   raise "Unsupported platform: #{node["platform"]}"
 end
 
-if platform?(%w{ ubuntu debian })
+if platform?([ "ubuntu", "debian" ])
   apt_repository "gridcentric-cobaltclient" do
     uri node["gridcentric"]["repo"]["cobaltclient"]["uri"]
     components node["gridcentric"]["repo"]["components"]
     key node["gridcentric"]["repo"]["key-uri"]
     notifies :run, resources(:execute => "apt-get update"), :immediately
   end
-elsif platform?(%w{ centos fedora })
+elsif platform?([ "centos", "fedora" ])
   yum_key "RPM-GPG-KEY-gridcentric" do
     url node["gridcentric"]["repo"]["key-uri"]
     action :add

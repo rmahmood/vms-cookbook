@@ -9,14 +9,14 @@ include_recipe "apt"
 include_recipe "vms"
 
 # Add the appropriate source list based on the platform.
-if platform?(%w{ ubuntu debian })
+if platform?([ "ubuntu", "debian" ])
   apt_repository "gridcentric-agent" do
     uri node["gridcentric"]["repo"]["agent"]["uri"]
     components node["gridcentric"]["repo"]["components"]
     key node["gridcentric"]["repo"]["key-uri"]
     notifies :run, resources(:execute => "apt-get update"), :immediately
   end
-elsif platform?(%w{ centos fedora })
+elsif platform?([ "centos", "fedora" ])
   yum_key "RPM-GPG-KEY-gridcentric" do
     url node["gridcentric"]["repo"]["key-uri"]
     action :add
