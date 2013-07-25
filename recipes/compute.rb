@@ -5,27 +5,33 @@
 # Copyright 2012, Gridcentric Inc.
 #
 
-include_recipe "apt"
 include_recipe "vms"
 
-if not platform?("ubuntu")
-  raise "Unsupported platform: #{node["platform"]}"
-end
-
-[ "vms", "cobalt" ].each do |repo|
-  apt_repository "gridcentric-#{repo}" do
-    uri node["gridcentric"]["repo"][repo]["uri"]
-    components node["gridcentric"]["repo"]["components"]
-    key node["gridcentric"]["repo"]["key-uri"]
-    only_if { platform?("ubuntu") }
+if platform?("ubuntu")
+  include_recipe "apt"
+  [ "vms", "cobalt" ].each do |repo|
+    apt_repository "gridcentric-#{repo}" do
+      uri node["gridcentric"]["repo"][repo]["uri"]
+      components node["gridcentric"]["repo"]["components"]
+      key node["gridcentric"]["repo"]["key-uri"]
+    end
   end
-end
 
-# Do this separately to avoid redundant updates, since we include
-# multiple repositories.
-execute "apt-get update" do
-  command "apt-get update"
-  action :run
+  # Do this separately to avoid redundant updates, since we include
+  # multiple repositories.
+  execute "apt-get update" do
+    command "apt-get update"
+    action :run
+  end
+elsif platform_family?("rhel")
+  [ "vms", "cobalt" ].each do |repo|
+    yum_repository "gridcentric-#{repo}" do
+      url node["gridcentric"]["repo"][repo]["uri"]
+      key "RPM-GPG-KEY-gridcentric"
+    end
+  end
+else
+  raise "Unsupported platform: #{node["platform"]}"
 end
 
 # Workaround for 2.4 packaging bug. The 2.4 vms-libvirt package
@@ -43,11 +49,22 @@ execute "ensure start-stop-vmsmd" do
 end
 
 # Explicitly upgrade vms low-level components
-[ "linux-headers-#{node["kernel"]["release"]}",
-  "vms-libvirt", "vms-mcdist" ].each do |pkg|
+
+if platform?("ubuntu")
+  linux_headers_package = "linux-headers-#{node["kernel"]["release"]}"
+elsif platform_family?("rhel")
+  linux_headers_package = "kernel-devel"
+else
+  raise "Unsupported platform: #{node["platform"]}"
+end
+
+
+[ linux_headers_package, "vms-libvirt", "vms-mcdist" ].each do |pkg|
   package pkg do
     action :upgrade
-    options "-o Dpkg::Options::='--force-confnew'"
+    if platform?("ubuntu")
+      options "-o Dpkg::Options::='--force-confnew'"
+    end
   end
 end
 
@@ -76,12 +93,16 @@ end
 if ["folsom", "essex", "diablo"].include?(node["gridcentric"]["os-version"])
   package "nova-compute-gridcentric" do
     action :upgrade
-    options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
+    if platform?("ubuntu")
+      options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
+    end
   end
 else
   package "cobalt-compute" do
     action :upgrade
-    options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
+    if platform?("ubuntu")
+      options "-o APT::Install-Recommends=0 -o Dpkg::Options::='--force-confnew'"
+    end
   end
 end
 
