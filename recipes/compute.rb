@@ -49,6 +49,17 @@ execute "ensure start-stop-vmsmd" do
 end
 
 # Explicitly upgrade vms low-level components
+if platform?("ubuntu")
+  if node["platform_version"] == "13.04"
+    qemu_package = "vms-qemu-raring"
+  else
+    # Assume precise otherwise
+    qemu_package = "vms-qemu-precise"
+  end
+elsif platform_family?("rhel")
+  # We don't have a host of choices here
+  qemu_package = "vms-qemu-fc19"
+end
 
 if platform?("ubuntu")
   linux_headers_package = "linux-headers-#{node["kernel"]["release"]}"
@@ -59,7 +70,7 @@ else
 end
 
 
-[ linux_headers_package, "vms-libvirt", "vms-mcdist" ].each do |pkg|
+[ qemu_package, linux_headers_package, "vms-libvirt", "vms-mcdist" ].each do |pkg|
   package pkg do
     action :upgrade
     if platform?("ubuntu")
