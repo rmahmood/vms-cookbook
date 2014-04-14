@@ -9,6 +9,5 @@ version          "1.2.0"
   supports os
 end
 
-%w{ apt yum }.each do |dep|
-  depends dep
-end
+depends "apt"
+depends "yum", ">= 3.0.0"

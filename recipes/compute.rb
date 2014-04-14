@@ -27,7 +27,7 @@ elsif platform_family?("rhel")
   [ "vms", "cobalt" ].each do |repo|
     yum_repository "gridcentric-#{repo}" do
       url node["gridcentric"]["repo"][repo]["uri"]
-      key "RPM-GPG-KEY-gridcentric"
+      gpgkey node["gridcentric"]["repo"]["key-uri"]
     end
   end
 else

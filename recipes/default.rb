@@ -61,10 +61,3 @@ if platform?("ubuntu")
 else
   node.normal["gridcentric"]["repo"]["components"] = ["gridcentric", "non-free"]
 end
-
-if platform_family?("rhel")
-  yum_key "RPM-GPG-KEY-gridcentric" do
-    url node["gridcentric"]["repo"]["key-uri"]
-    action :add
-  end
-end
